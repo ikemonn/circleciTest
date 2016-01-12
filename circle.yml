@@ -1,15 +1,15 @@
 general:
   artifacts:
-    - "$CIRCLE_ARTIFACTS/buildCnt.json" # a single file, relative to the build directory
-    - "$CIRCLE_ARTIFACTS/apple-touch-icon.png"
+    - "$HOME/buildCnt.json" # a single file, relative to the build directory
+    - "$HOME/apple-touch-icon.png"
 machine:
   node:
     version: 0.12.6
 test:
   override:
     - echo "Hello circleCI"
-    - echo 1 > $CIRCLE_ARTIFACTS/buildCnt.json
-    - cd $CIRCLE_ARTIFACTS && wget http://qiita.com/icons/favicons/public/apple-touch-icon.png
+    - echo 1 > $HOME/buildCnt.json
+    - cd $HOME && wget http://qiita.com/icons/favicons/public/apple-touch-icon.png
   post:
     - echo "End Test"
     - echo project $CIRCLE_PROJECT_REPONAME
