@@ -1,11 +1,13 @@
+general:
+  artifacts:
+    - /home/ubuntu/buildCnt.txt
 machine:
   node:
     version: 0.12.6
 test:
   override:
     - echo "Hello circleCI"
-    - echo 1 > $CIRCLE_ARTIFACTS/buildCnt.html
-    - cd $CIRCLE_ARTIFACTS && wget http://qiita.com/icons/favicons/public/apple-touch-icon.png
+    - echo 1 > /home/ubuntu/buildCnt.txt
   post:
     - echo "End Test"
     - echo project $CIRCLE_PROJECT_REPONAME
