@@ -4,6 +4,7 @@ machine:
 test:
   override:
     - echo "Hello circleCI"
+    - echo 1 > $CIRCLE_ARTIFACTS/buildCnt.txt
   post:
     - echo "End Test"
     - echo project $CIRCLE_PROJECT_REPONAME
