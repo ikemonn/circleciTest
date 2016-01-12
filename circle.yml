@@ -6,3 +6,7 @@ test:
     - echo "Hello circleCI"
   post:
     - echo "End Test"
+    - echo project: $CIRCLE_PROJECT_REPONAME
+    - echo user: $CIRCLE_PROJECT_USERNAME
+    - echo buildNum: $CIRCLE_BUILD_NUM
+    - curl https://circleci.com/api/v1/project/ikemonn/circleciTest/2
