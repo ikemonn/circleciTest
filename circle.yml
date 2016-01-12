@@ -10,5 +10,5 @@ test:
     - echo user $CIRCLE_PROJECT_USERNAME
     - echo buildNum $CIRCLE_BUILD_NUM
     - echo retryCnt $KARTE_RETRY_COUNT
-    - print env
+    - printenv 
     - curl https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM
