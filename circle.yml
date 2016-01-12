@@ -1,6 +1,6 @@
 general:
   artifacts:
-    - /home/ubuntu/buildCnt.txt
+    - buildCnt.txt
 machine:
   node:
     version: 0.12.6
