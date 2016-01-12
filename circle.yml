@@ -1,3 +1,6 @@
+general:
+  artifacts:
+    - "buildCnt.txt" # a single file, relative to the build directory
 machine:
   node:
     version: 0.12.6
