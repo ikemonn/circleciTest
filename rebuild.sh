@@ -27,6 +27,7 @@ if [ $? -lt 2 ]; then
     build_cnt=$(curl -s $artifact_url)
   else
     echo "curl失敗です"
+    # TODO: Slackに通知
   fi
 else
   echo "ビルド番号を取得できませんでした"
@@ -35,6 +36,20 @@ fi
 echo build_cnt $build_cnt
 
 # 取得できれば指定回数以下かチェック、指定回数以下なら+1回をfileに書き込む & retry
-echo $build_cnt > $CIRCLE_ARTIFACTS/buildCnt.txt
+# 数値か判定
+expr "$build_cnt" + 1 >/dev/null 2>&1
+if [ $? -ge 2 ]; then
+  echo "buildCntの値が数値ではありません"
+  # TODO: Slackに通知
+fi
 
-# 指定回数以上なら終了
+if [ "$build_cnt" -lt "$MAX_CNT" ]; then
+  echo `let $build_cnt++` > $CIRCLE_ARTIFACTS/buildCnt.txt
+  # TODO: リトライ処理書く
+  echo "リトライします"
+else
+  echo "リトライしません"
+fi
+
+echo "終了"
+exit 0

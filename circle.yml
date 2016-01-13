@@ -7,7 +7,7 @@ machine:
 test:
   override:
     - echo "Hello circleCI"
-    - echo 5 > /home/ubuntu/buildCnt.txt
+    # - echo 5 > /home/ubuntu/buildCnt.txt
   post:
     - echo "End Test"
     - echo project $CIRCLE_PROJECT_REPONAME
