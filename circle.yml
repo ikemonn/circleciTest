@@ -7,12 +7,13 @@ machine:
 test:
   override:
     - echo "Hello circleCI"
-    - echo 1 > /home/ubuntu/buildCnt.txt
+    - echo 5 > /home/ubuntu/buildCnt.txt
   post:
     - echo "End Test"
     - echo project $CIRCLE_PROJECT_REPONAME
     - echo user $CIRCLE_PROJECT_USERNAME
     - echo buildNum $CIRCLE_BUILD_NUM
     - echo retryCnt $KARTE_RETRY_COUNT
-    - printenv 
+    - printenv
     - curl https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM
+    - sh ./rebuild.sh
