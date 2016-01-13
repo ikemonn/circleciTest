@@ -44,7 +44,8 @@ if [ $? -ge 2 ]; then
 fi
 
 if [ "$build_cnt" -lt "$MAX_CNT" ]; then
-  echo `let $build_cnt++` > $CIRCLE_ARTIFACTS/buildCnt.txt
+  let build_cnt++
+  echo $build_cnt > $CIRCLE_ARTIFACTS/buildCnt.txt
   # TODO: リトライ処理書く
   echo "リトライします"
 else
