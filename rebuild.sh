@@ -3,11 +3,11 @@
 MAX_CNT=3
 curr_build_id=$CIRCLE_BUILD_NUM
 build_cnt=0
+API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
 
 # 現在のリトライ回数を取得する
-
 # 前回のビルド番号
-prev_build_id=$(curl -s https://circleci.com/api/v1/project/ikemonn/circleciTest/$curr_build_id | sed -e '1,1d' | jq '.retry_of')
+prev_build_id=$(curl -s $API_END_POINT/$curr_build_id | sed -e '1,1d' | jq '.retry_of')
 echo prev_build_id $prev_build_id
 # nullかビルド番号が返ってくるので、数値か文字列かを判定
 expr "$prev_build_id" + 1 >/dev/null 2>&1
@@ -16,7 +16,7 @@ if [ $? -lt 2 ]; then
   echo "前回までのビルド回数を取得します。"
   ARTIFACTS_NAME="buildCnt"
   # "buildCnt"が含まれているデータを取得し、artifactsのURLを取得
-  artifact_url=$(curl -s https://circleci.com/api/v1/project/ikemonn/circleciTest/$prev_build_id/artifacts?circle-token=$CIRCLE_TOKEN|sed -e '1,1d'|jq -r '.[] | select(contains({path:"buildCnt"})) | .url')
+  artifact_url=$(curl -s $API_END_POINT/$prev_build_id/artifacts?circle-token=$CIRCLE_TOKEN|sed -e '1,1d'|jq -r '.[] | select(contains({path:"buildCnt"})) | .url')
   echo URL " $artifact_url"
   # 正しく通信できているか確認(exit codeが0以外だとエラー)
   exit_code=$(curl -f -I $artifact_url)
@@ -47,6 +47,11 @@ if [ "$build_cnt" -lt "$MAX_CNT" ]; then
   echo $build_cnt > $CIRCLE_ARTIFACTS/buildCnt.txt
   # TODO: リトライ処理書く
   echo "リトライします"
+  # キャッシュの削除
+  curl -X DELETE $API_END_POINT/build-cache?circle-token=$CIRCLE_TOKEN
+  # リビルド
+  curl -X POST $API_END_POINT/$curr_build_id/retry?circle-token=$CIRCLE_TOKEN
+  echo "Rebuild without cache"
 else
   echo "リトライしません"
 fi
