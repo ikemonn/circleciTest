@@ -2,7 +2,6 @@
 
 MAX_CNT=3
 curr_build_id=$CIRCLE_BUILD_NUM
-# curr_build_id=23
 build_cnt=0
 
 # 現在のリトライ回数を取得する
