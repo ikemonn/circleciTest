@@ -78,5 +78,3 @@ else
   echo "指定回数以上リトライ済みなので、リトライしません"
   comment_pull_request $pull_request_num "false" $curr_build_id
 fi
-
-exit 0
