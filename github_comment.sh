@@ -1,9 +1,5 @@
 #!/bin/sh -e
 
-echo "HELLO GITHUB!!!"
-
-
-
 comment_pull_request() {
   pull_request_num=$1
   is_success=$2

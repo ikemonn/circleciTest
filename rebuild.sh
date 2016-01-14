@@ -3,7 +3,7 @@ abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/github_comment.sh
 
 # MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
-MAX_REBUILD_CNT=2 # TODO: test
+MAX_REBUILD_CNT=1 # TODO: test
 curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
 rebuild_cnt=0 # リビルド回数
 API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
@@ -14,7 +14,7 @@ test_fail_cnt=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed 
 
 # pullreqのnumberを取得する
 # https://github.com/ikemonn/circleciTest/pull/1 の形で来るので、末尾だけ取得
-pull_request_num=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' | jq -r '.pull_request_urls[]' | awk -F / '{print NF}')
+pull_request_num=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' | jq -r '.pull_request_urls[]' | awk -F / '{print $NF}')
 
 echo test_fail_cnt $test_fail_cnt
 if [ $test_fail_cnt -le 0 ]; then
