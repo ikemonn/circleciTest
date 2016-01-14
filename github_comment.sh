@@ -16,7 +16,7 @@ comment_pull_request() {
     emoji=":white_check_mark:"
   fi
   echo $END_POINT
-  curl -u "$user_name:$token" -d "{\"body\": \"$emoji$emojiCircleCI Test $build_result$emoji$emoji\n$BUILD_URL\"}" $END_POINT
+  curl -u "$user_name:$token" -d "{\"body\": \"$emoji$emoji CircleCI Test $build_result $emoji$emoji\n$BUILD_URL\"}" $END_POINT
 }
 
 
