@@ -1,6 +1,16 @@
 #!/bin/sh
+
+#######################
+# 概要:
+# CircleCIのテストがFailしたら、MAX_REBUILD_CNT回だけrebuildする。
+# rebuild時にはCacheを消して失敗したbuildをretryする。
+# rebuildの回数はartifactsのbuildCnt.txtに書き込んでおり、
+# それを取得して現在何回目のリビルドかを管理している。
+# テストが成功するか、MAX_REBUILD_CNT回だけ失敗したらGitHubのpullreqにコメントする。
+#######################
 abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/github_comment.sh
+. ${abs_path}/slack.sh
 
 # MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
 MAX_REBUILD_CNT=1 # TODO: test
@@ -8,9 +18,14 @@ curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
 rebuild_cnt=0 # リビルド回数
 API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
 CIRCLE_TOKEN_PARAM="circle-token=$CIRCLE_REBUILD_TOKEN"
+BUILD_RESULT_URL="https://circleci.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$curr_build_id"
+BUILD_USER_NAME=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' | jq -r '.user.login')
+
+notify_to_slack ":fire: Slack通知のテストです！ :fire:" $BUILD_URL $BUILD_USER_NAME
+
 
 # 今回のビルドが成功しているかを確認
-# 取得できる配列にある、stepのstatus:failedの数を確認する)
+# APIから取得できる配列内の、status:failedの数を確認する
 test_fail_cnt=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' | jq '[.steps[].actions[] | select(contains({status:"failed"})) | .status] | length')
 
 # pullreqのnumberを取得する
@@ -43,11 +58,12 @@ if [ $? -lt 2 ]; then
   # 正しく通信できているか確認(exit codeが0以外だとエラー)
   exit_code=$(curl -f -I $artifact_url?$CIRCLE_TOKEN_PARAM)
   if [ $? -eq 0 ];then
-    echo "curlできているので、ビルド回数を取得します"
+    echo "curlが成功したので、ビルド回数を取得します"
     rebuild_cnt=$(curl -s $artifact_url?$CIRCLE_TOKEN_PARAM)
   else
     echo "curl失敗です"
-    # TODO: Slackに通知
+    notify_to_slack ":fire:Artifactsを取得する際のcurlで失敗しました:fire:" $BUILD_URL $BUILD_USER_NAME
+    exit 1
   fi
 
 else
@@ -61,7 +77,8 @@ echo rebuild_cnt $rebuild_cnt
 expr "$rebuild_cnt" + 1 >/dev/null 2>&1
 if [ $? -ge 2 ]; then
   echo "buildCntの値が数値ではありません"
-  # TODO: Slackに通知
+  notify_to_slack ":fire:Artifactsから取得したbuildCntが数値以外の異常な値でした:fire:" $BUILD_URL $BUILD_USER_NAME
+  exit 1
 fi
 
 if [ "$rebuild_cnt" -lt "$MAX_REBUILD_CNT" ]; then
@@ -73,8 +90,6 @@ if [ "$rebuild_cnt" -lt "$MAX_REBUILD_CNT" ]; then
   curl -X DELETE $API_END_POINT/build-cache?$CIRCLE_TOKEN_PARAM
   # リビルド
   curl -X POST $API_END_POINT/$curr_build_id/retry?$CIRCLE_TOKEN_PARAM
-
-  echo "Rebuild without cache"
 else
   echo "指定回数以上リトライ済みなので、リトライしません"
   comment_pull_request $pull_request_num "false" $curr_build_id
