@@ -5,8 +5,8 @@ comment_pull_request() {
   IS_SUCCESS=$2
   BUILD_NUM=$3
   BUILD_URL=$4
-  USER_NAME="circleCI"
-  END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/issues/$PULL_REQUEST_NUM/comments"
+  END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+  USER_NAME=$(curl -s -H "Authorization:token $GITHUB_API_TOKEN" $END_POINT/pulls/$PULL_REQUEST_NUM | jq -r '.user.login')
 
   build_result="Failed"
   emoji=":fire:"
@@ -14,7 +14,8 @@ comment_pull_request() {
     build_result="Success!"
     emoji=":white_check_mark:"
   fi
-  echo $END_POINT
+  echo $USER_NAME
+  echo $END_POINT/issues/$PULL_REQUEST_NUM/comments
   curl -u "circleci_rebuild:$GITHUB_API_TOKEN" -d "{\"body\": \"@USER_NAME\nCircleCI Test $build_result $emoji\n$BUILD_URL\"}" $END_POINT/issues/$PULL_REQUEST_NUM/comments
 }
 
