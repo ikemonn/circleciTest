@@ -21,8 +21,7 @@ CIRCLE_TOKEN_PARAM="circle-token=$CIRCLE_REBUILD_TOKEN"
 BUILD_RESULT_URL="https://circleci.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$curr_build_id"
 BUILD_USER_NAME=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' | jq -r '.user.login')
 
-notify_to_slack ":fire: Slack通知のテストです！ :fire:" $BUILD_URL $BUILD_USER_NAME
-
+notify_to_slack ":fire: Slack通知のテストです！ :fire:" $BUILD_RESULT_URL $BUILD_USER_NAME
 
 # 今回のビルドが成功しているかを確認
 # APIから取得できる配列内の、status:failedの数を確認する
@@ -62,7 +61,7 @@ if [ $? -lt 2 ]; then
     rebuild_cnt=$(curl -s $artifact_url?$CIRCLE_TOKEN_PARAM)
   else
     echo "curl失敗です"
-    notify_to_slack ":fire:Artifactsを取得する際のcurlで失敗しました:fire:" $BUILD_URL $BUILD_USER_NAME
+    notify_to_slack ":fire:Artifactsを取得する際のcurlで失敗しました:fire:" $BUILD_RESULT_URL $BUILD_USER_NAME
     exit 1
   fi
 
@@ -77,7 +76,7 @@ echo rebuild_cnt $rebuild_cnt
 expr "$rebuild_cnt" + 1 >/dev/null 2>&1
 if [ $? -ge 2 ]; then
   echo "buildCntの値が数値ではありません"
-  notify_to_slack ":fire:Artifactsから取得したbuildCntが数値以外の異常な値でした:fire:" $BUILD_URL $BUILD_USER_NAME
+  notify_to_slack ":fire:Artifactsから取得したbuildCntが数値以外の異常な値でした:fire:" $BUILD_RESULT_URL $BUILD_USER_NAME
   exit 1
 fi
 
@@ -85,7 +84,6 @@ if [ "$rebuild_cnt" -lt "$MAX_REBUILD_CNT" ]; then
   rebuild_cnt=$((rebuild_cnt+1))
   echo $rebuild_cnt > $CIRCLE_ARTIFACTS/buildCnt.txt
   echo "リトライします"
-
   # キャッシュの削除
   curl -X DELETE $API_END_POINT/build-cache?$CIRCLE_TOKEN_PARAM
   # リビルド
