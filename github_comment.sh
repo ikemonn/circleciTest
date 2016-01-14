@@ -15,7 +15,7 @@ comment_pull_request() {
     emoji=":white_check_mark:"
   fi
   echo $END_POINT
-  curl -u "$USER_NAME:$GITHUB_API_TOKEN" -d "{\"body\": \"CircleCI Test $build_result $emoji\n$BUILD_URL\"}" $END_POINT
+  curl -u "circleci_rebuild:$GITHUB_API_TOKEN" -d "{\"body\": \"@USER_NAME\nCircleCI Test $build_result $emoji\n$BUILD_URL\"}" $END_POINT/issues/$PULL_REQUEST_NUM/comments
 }
 
 
