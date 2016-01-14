@@ -9,7 +9,8 @@ rebuild_cnt=0 # リビルド回数
 API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
 CIRCLE_TOKEN_PARAM="circle-token=$CIRCLE_REBUILD_TOKEN"
 
-# 今回のビルドが成功しているかを確認(stepのstatus:failedの数を確認する)
+# 今回のビルドが成功しているかを確認
+# 取得できる配列にある、stepのstatus:failedの数を確認する)
 test_fail_cnt=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' | jq '[.steps[].actions[] | select(contains({status:"failed"})) | .status] | length')
 
 # pullreqのnumberを取得する
