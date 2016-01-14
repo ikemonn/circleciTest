@@ -1,22 +1,21 @@
-#!/bin/sh -e
+#!/bin/sh
 
 comment_pull_request() {
-  pull_request_num=$1
-  is_success=$2
-  build_num=$3
-  user_name="circleCI"
-  token=$GITHUB_API_TOKEN
-  BUILD_URL="https://circleci.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$build_num"
-  END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/issues/$pull_request_num/comments"
+  PULL_REQUEST_NUM=$1
+  IS_SUCCESS=$2
+  BUILD_NUM=$3
+  BUILD_URL=$4
+  USER_NAME="circleCI"
+  END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/issues/$PULL_REQUEST_NUM/comments"
 
   build_result="Failed"
   emoji=":fire:"
-  if [ "$is_success" = "true" ]; then
+  if [ "$IS_SUCCESS" = "true" ]; then
     build_result="Success!"
     emoji=":white_check_mark:"
   fi
   echo $END_POINT
-  curl -u "$user_name:$token" -d "{\"body\": \"CircleCI Test $build_result $emoji\n$BUILD_URL\"}" $END_POINT
+  curl -u "$USER_NAME:$GITHUB_API_TOKEN" -d "{\"body\": \"CircleCI Test $build_result $emoji\n$BUILD_URL\"}" $END_POINT
 }
 
 

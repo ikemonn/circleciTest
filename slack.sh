@@ -1,11 +1,11 @@
 #!/bin/sh
 
 notify_to_slack() {
-  CHANNEL="#test_ikemonn"
-  USER_NAME="circleci_rebuild"
   MSG=${1:-"rebuild中にエラーが起きました"}
   BUILD_URL=${2:-"https://circleci.com/"}
   MENTIONED_NAME=$3
+  CHANNEL="#dev_notification"
+  USER_NAME="circleci_rebuild"
 
   # リッチなフォーマットでpostする(https://api.slack.com/docs/attachments)
   post_data=`cat <<-EOF
