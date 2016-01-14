@@ -9,7 +9,7 @@ test:
     - echo "Hello circleCI"
     # - echo 5 > /home/ubuntu/buildCnt.txt
     - case $CIRCLE_NODE_INDEX in 0) exit 0 ;; 1) exit 1 ;; esac:
-      parallel: true
+        parallel: true
   post:
     - exit 0
     # - exit 1
