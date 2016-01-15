@@ -17,7 +17,7 @@ notify_to_slack() {
       {
         "fallback": "Fallback $MSG",
         "color": "$COLOR",
-        "author_name": "@$MENTIONED_NAME",
+        "pretext": "@$MENTIONED_NAME",
         "title": "$MSG\n$BUILD_URL",
         "title_link": "$BUILD_URL"
       }

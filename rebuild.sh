@@ -22,7 +22,6 @@ BUILD_RESULT_URL="https://circleci.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJE
 BUILD_RESULT_FILE=$HOME/result.txt
 # ビルド結果は使いまわすのでファイルに書き込む
 curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' > $BUILD_RESULT_FILE
-head $BUILD_RESULT_FILE
 BUILD_USER_NAME=$(cat $BUILD_RESULT_FILE | sed -e '1,1d' | jq -r '.user.login')
 BUILD_BRANCH=$(cat $BUILD_RESULT_FILE | jq -r '.branch')
 
