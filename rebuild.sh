@@ -11,6 +11,7 @@
 abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/github_comment.sh
 . ${abs_path}/slack.sh
+. ${abs_path}/common_function.sh
 
 # MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
 MAX_REBUILD_CNT=1 # TODO: test
@@ -24,6 +25,8 @@ BUILD_RESULT_FILE=$HOME/result.txt
 curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' > $BUILD_RESULT_FILE
 BUILD_USER_NAME=$(cat $BUILD_RESULT_FILE | sed -e '1,1d' | jq -r '.user.login')
 BUILD_BRANCH=$(cat $BUILD_RESULT_FILE | jq -r '.branch')
+SLACK_MENTIONED_NAME=$(get_mention_name $BUILD_USER_NAME $BUILD_BRANCH) # Slackでmentionされる名前(release/hotfixはchannelになる)
+echo SLACK_MENTIONED_NAME $SLACK_MENTIONED_NAME
 
 # 今回のビルドが成功しているかを確認
 # APIから取得できる配列内の、status:failedの数を確認する

@@ -1,5 +1,4 @@
 #!/bin/sh
-
 notify_to_slack() {
   MSG=${1:-"rebuild中にエラーが起きました"}
   BUILD_URL=${2:-"https://circleci.com/"}
