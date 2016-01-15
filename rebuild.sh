@@ -28,10 +28,11 @@ test_fail_cnt=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed 
 # pullreqのnumberを取得する
 # https://github.com/ikemonn/circleciTest/pull/1 の形で来るので、末尾だけ取得
 pull_request_num=$(curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' | jq -r '.pull_request_urls[]' | awk -F / '{print $NF}')
-
+echo pull_request_num $pull_request_num
 echo test_fail_cnt $test_fail_cnt
 if [ $test_fail_cnt -le 0 ]; then
   echo "Testはすべて成功です！"
+  notify_to_slack ":white_check_mark: CircleCIのテストが成功しました！ :white_check_mark:" $BUILD_RESULT_URL $BUILD_USER_NAME "good"
   comment_pull_request $pull_request_num "true" $curr_build_id $BUILD_RESULT_URL
   exit 0
 fi
@@ -88,5 +89,6 @@ if [ "$rebuild_cnt" -lt "$MAX_REBUILD_CNT" ]; then
   curl -X POST $API_END_POINT/$curr_build_id/retry?$CIRCLE_TOKEN_PARAM
 else
   echo "指定回数以上リトライ済みなので、リトライしません"
+  notify_to_slack ":fire: CircleCIのテストが失敗しました :fire:" $BUILD_RESULT_URL $BUILD_USER_NAME
   comment_pull_request $pull_request_num "false" $curr_build_id $BUILD_RESULT_URL
 fi

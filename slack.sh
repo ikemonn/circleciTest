@@ -4,6 +4,7 @@ notify_to_slack() {
   MSG=${1:-"rebuild中にエラーが起きました"}
   BUILD_URL=${2:-"https://circleci.com/"}
   MENTIONED_NAME=$3
+  COLOR=${4:-"danger"}
   CHANNEL="#dev_notification"
   USER_NAME="circleci_rebuild"
 
@@ -15,7 +16,7 @@ notify_to_slack() {
     "attachments": [
       {
         "fallback": "Fallback $MSG",
-        "color": "danger",
+        "color": "$COLOR",
         "author_name": "@$MENTIONED_NAME",
         "title": "$MSG\n$BUILD_URL",
         "title_link": "$BUILD_URL"
