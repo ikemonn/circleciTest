@@ -1,11 +1,11 @@
 #!/bin/sh
-
 # release/hotfixブランチかを判定
 get_is_deploy_branch() {
   BRANCH_NAME=$1
   result="false"
-  if [[ "$BRANCH_NAME" =~ ^[release|hotfix]+\/ ]]; then
-  	result="true"
+  # dashなのでbashの文法が使えない
+  if expr "$BRANCH_NAME" : '^release\/\|hotfix\/' >/dev/null;then
+    result="true"
   fi
   echo $result
 }
