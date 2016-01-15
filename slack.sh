@@ -5,7 +5,7 @@ notify_to_slack() {
   BUILD_URL=${2:-"https://circleci.com/"}
   MENTIONED_NAME=$3
   COLOR=${4:-"danger"}
-  CHANNEL="#dev_notification"
+  CHANNEL="#test_ikemonn"
   USER_NAME="circleci_rebuild"
 
   # リッチなフォーマットでpostする(https://api.slack.com/docs/attachments)
