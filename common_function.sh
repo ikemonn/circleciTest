@@ -14,7 +14,8 @@ get_is_deploy_branch() {
 get_mention_name() {
   MENTIONED_NAME=$1
   BRANCH_NAME=$2
-  if [$(get_is_deploy_branch $BRANCH_NAME) = "true"]; then
+  echo mention_result $(get_is_deploy_branch $BRANCH_NAME)
+  if [ $(get_is_deploy_branch $BRANCH_NAME) = "true" ]; then
     MENTIONED_NAME="channel"
   fi
   echo $MENTIONED_NAME
