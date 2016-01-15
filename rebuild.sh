@@ -39,7 +39,7 @@ echo pull_request_num $pull_request_num
 echo test_fail_cnt $test_fail_cnt
 if [ $test_fail_cnt -le 0 ]; then
   echo "Testはすべて成功です！"
-  notify_to_slack ":white_check_mark: CircleCIのテストが成功しました！($BUILD_BRANCH) :white_check_mark:" $BUILD_RESULT_URL $BUILD_USER_NAME "good"
+  notify_to_slack ":white_check_mark: CircleCIのテストが成功しました！($BUILD_BRANCH) :white_check_mark:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME "good"
   comment_pull_request $pull_request_num "true" $curr_build_id $BUILD_RESULT_URL
   exit 0
 fi
@@ -67,7 +67,7 @@ if [ $? -lt 2 ]; then
     rebuild_cnt=$(curl -s $artifact_url?$CIRCLE_TOKEN_PARAM)
   else
     echo "curl失敗です"
-    notify_to_slack ":fire: Artifactsを取得する際のcurlで失敗しました :fire:" $BUILD_RESULT_URL $BUILD_USER_NAME
+    notify_to_slack ":fire: Artifactsを取得する際のcurlで失敗しました :fire:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME
     exit 1
   fi
 
@@ -82,7 +82,7 @@ echo rebuild_cnt $rebuild_cnt
 expr "$rebuild_cnt" + 1 >/dev/null 2>&1
 if [ $? -ge 2 ]; then
   echo "buildCntの値が数値ではありません"
-  notify_to_slack ":fire: Artifactsから取得したbuildCntが数値以外の異常な値でした :fire:" $BUILD_RESULT_URL $BUILD_USER_NAME
+  notify_to_slack ":fire: Artifactsから取得したbuildCntが数値以外の異常な値でした :fire:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME
   exit 1
 fi
 
@@ -96,6 +96,6 @@ if [ "$rebuild_cnt" -lt "$MAX_REBUILD_CNT" ]; then
   curl -X POST $API_END_POINT/$curr_build_id/retry?$CIRCLE_TOKEN_PARAM
 else
   echo "指定回数以上リトライ済みなので、リトライしません"
-  notify_to_slack ":fire: CircleCIのテストが失敗しました($BUILD_BRANCH) :fire:" $BUILD_RESULT_URL $BUILD_USER_NAME
+  notify_to_slack ":fire: CircleCIのテストが失敗しました($BUILD_BRANCH) :fire:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME
   comment_pull_request $pull_request_num "false" $curr_build_id $BUILD_RESULT_URL
 fi
