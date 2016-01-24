@@ -36,12 +36,9 @@ rebuild_without_cache() {
 test_canceled_cnt=$(cat $BUILD_RESULT_FILE | sed -e '1,1d' | jq '[.steps[].actions[] | select(contains({status:"canceled"})) | .status] | length')
 echo test_canceled_cnt $test_canceled_cnt
 if [ $test_canceled_cnt -gt 0 ]; then
+  echo "テストがCancelされました"
   exit 0
 fi
-
-echo "test終了！"
-exit 1
-
 
 # 今回のビルドが成功しているかを確認
 # APIから取得できる配列内の、status:failedの数を確認する
