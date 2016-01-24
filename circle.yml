@@ -8,12 +8,12 @@ test:
   override:
     - echo "Hello circleCI"
     # - echo 5 > /home/ubuntu/buildCnt.txt
-    - case $CIRCLE_NODE_INDEX in 0) exit 0 ;; 1) exit 1 ;; esac:
-        parallel: true
-  post:
-    - exit 0
-    - exit 1
+    # - case $CIRCLE_NODE_INDEX in 0) exit 0 ;; 1) exit 1 ;; esac:
+    #     parallel: true
     - sleep 120
+    # - exit 1
+    # - sleep 120
+  post:
     # - echo "post Test"
     # - echo project $CIRCLE_PROJECT_REPONAME
     # - echo user $CIRCLE_PROJECT_USERNAME
