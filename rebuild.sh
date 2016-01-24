@@ -14,7 +14,7 @@ abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/common_function.sh
 
 MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
-curr_build_id=93 #今回のビルドID
+curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
 rebuild_cnt=0 # リビルド回数
 API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
 CIRCLE_TOKEN_PARAM="circle-token=$CIRCLE_REBUILD_TOKEN"
