@@ -14,7 +14,8 @@ abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/common_function.sh
 
 MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
-curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
+# curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
+curr_build_id=94 #今回のビルドID
 rebuild_cnt=0 # リビルド回数
 API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
 CIRCLE_TOKEN_PARAM="circle-token=$CIRCLE_REBUILD_TOKEN"
@@ -37,6 +38,7 @@ test_canceled_cnt=$(cat $BUILD_RESULT_FILE | sed -e '1,1d' | jq '[.steps[].actio
 echo test_canceled_cnt $test_canceled_cnt
 if [ $test_canceled_cnt -gt 0 ]; then
   echo "テストがCancelされました"
+  notify_to_slack ":raised_hand_with_fingers_splayed: CircleCIのテストがキャンセルされました。($BUILD_BRANCH) :raised_hand_with_fingers_splayed:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME "#e2e2e2"
   exit 0
 fi
 
