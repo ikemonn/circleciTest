@@ -13,6 +13,7 @@ test:
   post:
     - exit 0
     - exit 1
+    - sleep 120
     # - echo "post Test"
     # - echo project $CIRCLE_PROJECT_REPONAME
     # - echo user $CIRCLE_PROJECT_USERNAME
