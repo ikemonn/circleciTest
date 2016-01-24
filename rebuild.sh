@@ -14,7 +14,7 @@ abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/common_function.sh
 
 MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
-curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
+curr_build_id=93 #今回のビルドID
 rebuild_cnt=0 # リビルド回数
 API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
 CIRCLE_TOKEN_PARAM="circle-token=$CIRCLE_REBUILD_TOKEN"
@@ -31,6 +31,17 @@ rebuild_without_cache() {
   curl -X DELETE $API_END_POINT/build-cache?$CIRCLE_TOKEN_PARAM
   curl -X POST $API_END_POINT/$curr_build_id/retry?$CIRCLE_TOKEN_PARAM
 }
+
+# ビルドがCancelされたら何もせずに終了
+test_canceled_cnt=$(cat $BUILD_RESULT_FILE | sed -e '1,1d' | jq '[.steps[].actions[] | select(contains({status:"canceled"})) | .status] | length')
+echo test_canceled_cnt $test_canceled_cnt
+if [ $test_canceled_cnt -gt 0 ]; then
+  exit 0
+fi
+
+echo "test終了！"
+exit 1
+
 
 # 今回のビルドが成功しているかを確認
 # APIから取得できる配列内の、status:failedの数を確認する
