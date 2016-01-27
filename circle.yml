@@ -13,7 +13,8 @@ test:
     # - sleep 120
     # - exit 1
     # - sleep 120
-  post:
+    - sh test.sh
+  # post:
     # - echo "post Test"
     # - echo project $CIRCLE_PROJECT_REPONAME
     # - echo user $CIRCLE_PROJECT_USERNAME
@@ -21,4 +22,4 @@ test:
     # - echo retryCnt $KARTE_RETRY_COUNT
     # - printenv
     # - curl https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM
-    - sh ./rebuild.sh
+    # - sh ./rebuild.sh
