@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#######################
+#######################    
 # 概要:
 # CircleCIのテストがFailしたら、MAX_REBUILD_CNT回だけrebuildする。
 # rebuild時にはCacheを消して失敗したbuildをretryする。
