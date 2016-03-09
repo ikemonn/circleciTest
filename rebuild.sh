@@ -13,9 +13,9 @@ abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/slack.sh
 . ${abs_path}/common_function.sh
 
-MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
-# curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
-curr_build_id=94 #今回のビルドID
+# MAX_REBUILD_CNT=2 # 最大何回リビルドするか？build + rebuild = 3回で設定
+MAX_REBUILD_CNT=1 # TODO: test
+curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
 rebuild_cnt=0 # リビルド回数
 API_END_POINT="https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
 CIRCLE_TOKEN_PARAM="circle-token=$CIRCLE_REBUILD_TOKEN"
@@ -26,21 +26,7 @@ curl -s $API_END_POINT/$curr_build_id?$CIRCLE_TOKEN_PARAM | sed -e '1,1d' > $BUI
 BUILD_USER_NAME=$(cat $BUILD_RESULT_FILE | sed -e '1,1d' | jq -r '.user.login')
 BUILD_BRANCH=$(cat $BUILD_RESULT_FILE | jq -r '.branch')
 SLACK_MENTIONED_NAME=$(get_mention_name $BUILD_USER_NAME $BUILD_BRANCH) # Slackでmentionされる名前(release/hotfixはchannelになる)
-
-# キャッシュを削除してリビルドする
-rebuild_without_cache() {
-  curl -X DELETE $API_END_POINT/build-cache?$CIRCLE_TOKEN_PARAM
-  curl -X POST $API_END_POINT/$curr_build_id/retry?$CIRCLE_TOKEN_PARAM
-}
-
-# ビルドがCancelされたら何もせずに終了
-test_canceled_cnt=$(cat $BUILD_RESULT_FILE | sed -e '1,1d' | jq '[.steps[].actions[] | select(contains({status:"canceled"})) | .status] | length')
-echo test_canceled_cnt $test_canceled_cnt
-if [ $test_canceled_cnt -gt 0 ]; then
-  echo "テストがCancelされました"
-  notify_to_slack ":raised_hand_with_fingers_splayed: CircleCIのテストがキャンセルされました。($BUILD_BRANCH) :raised_hand_with_fingers_splayed:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME "#e2e2e2"
-  exit 0
-fi
+echo SLACK_MENTIONED_NAME $SLACK_MENTIONED_NAME
 
 # 今回のビルドが成功しているかを確認
 # APIから取得できる配列内の、status:failedの数を確認する
@@ -81,11 +67,7 @@ if [ $? -lt 2 ]; then
     rebuild_cnt=$(curl -s $artifact_url?$CIRCLE_TOKEN_PARAM)
   else
     echo "curl失敗です"
-    # Artifactsが作られる前にテストがこけて、CircleCIのGUI上からrebuildするとここを通る
-    # 念のため一度だけrebuildする
-    echo $((MAX_REBUILD_CNT-1)) > $CIRCLE_ARTIFACTS/buildCnt.txt
-    rebuild_without_cache
-    notify_to_slack ":fire: Artifactsを取得する際のcurlで失敗しました。rebuildします。 :fire:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME
+    notify_to_slack ":fire: Artifactsを取得する際のcurlで失敗しました :fire:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME
     exit 1
   fi
 
@@ -108,7 +90,10 @@ if [ "$rebuild_cnt" -lt "$MAX_REBUILD_CNT" ]; then
   rebuild_cnt=$((rebuild_cnt+1))
   echo $rebuild_cnt > $CIRCLE_ARTIFACTS/buildCnt.txt
   echo "リトライします"
-  rebuild_without_cache
+  # キャッシュの削除
+  curl -X DELETE $API_END_POINT/build-cache?$CIRCLE_TOKEN_PARAM
+  # リビルド
+  curl -X POST $API_END_POINT/$curr_build_id/retry?$CIRCLE_TOKEN_PARAM
 else
   echo "指定回数以上リトライ済みなので、リトライしません"
   notify_to_slack ":fire: CircleCIのテストが失敗しました($BUILD_BRANCH) :fire:" $BUILD_RESULT_URL $SLACK_MENTIONED_NAME
