@@ -8,7 +8,7 @@ check_label() {
   local TARGET_LABEL=$1
   local PULL_REQUEST_NUM=$2
   local END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
-  local LABEL_LIST=$(curl -s -H "Authorization:token $GITHUB_API_TOKEN" $END_POINT/pulls/$PULL_REQUEST_NUM | jq -r '.user.login')
+  local LABEL_LIST=$(curl -s -H "Authorization:token $GITHUB_API_TOKEN" $END_POINT/issues/$PULL_REQUEST_NUM | jq -r '.user.login')
   echo $LABEL_LIST
   for label in $LABEL_LIST;
   do
@@ -19,5 +19,5 @@ check_label() {
     fi
   done
   echo "自動マージ用に設定されたラベルはありませんでした。終了します。"
-  exit 1
+  echo 1
 }
