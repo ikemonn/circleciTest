@@ -7,7 +7,7 @@ merge_pull_request() {
   echo $HASH_NUM
   echo $END_POINT/pulls/$PULL_REQUEST_NUM/merge
   echo "{'commit_message': "", 'sha':$HASH_NUM}"
-  curl -X PUT -d "{'commit_message': "", 'sha':$HASH_NUM}" $END_POINT/pulls/$PULL_REQUEST_NUM/merge
+  curl -X PUT -d "{'commit_message': '', 'sha':$HASH_NUM}" $END_POINT/pulls/$PULL_REQUEST_NUM/merge
 }
 
 
