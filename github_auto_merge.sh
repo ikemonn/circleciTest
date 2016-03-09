@@ -10,10 +10,10 @@ check_label() {
   local END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
   echo url $END_POINT/issues/$PULL_REQUEST_NUM
   curl $END_POINT/issues/$PULL_REQUEST_NUM
-  local LABEL_LIST=$(curl $END_POINT/issues/$PULL_REQUEST_NUM | jq -r '.labels[].name')
-  # local LABEL_LIST=$(curl -s -H "Authorization:token $GITHUB_API_TOKEN" $END_POINT/issues/$PULL_REQUEST_NUM | jq -r '.user.login')
-  echo "リスト:" $LABEL_LIST
-  for label in $LABEL_LIST;
+  label_list=$(curl $END_POINT/issues/$PULL_REQUEST_NUM | jq -r '.labels[].name')
+  # local label_list=$(curl -s -H "Authorization:token $GITHUB_API_TOKEN" $END_POINT/issues/$PULL_REQUEST_NUM | jq -r '.user.login')
+  echo "リスト:" $label_list
+  for label in $label_list;
   do
     echo "らべる: " $label
     if [ "$label" = "$TARGET_LABEL" ]; then
