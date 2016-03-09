@@ -7,7 +7,7 @@ merge_pull_request() {
   local HASH_NUM=$(curl $END_POINT/pulls/$PULL_REQUEST_NUM | jq -r '.head.sha')
   echo $HASH_NUM
   echo $END_POINT/pulls/$PULL_REQUEST_NUM/merge
-  curl -X PUT -d {"commit_message": "$MSG", "sha":"$HASH_NUM"} $END_POINT/pulls/$PULL_REQUEST_NUM/merge
+  curl -X PUT -d {"commit_message": $MSG, "sha":"$HASH_NUM"} $END_POINT/pulls/$PULL_REQUEST_NUM/merge
 }
 
 
