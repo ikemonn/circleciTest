@@ -6,7 +6,7 @@ machine:
     version: 0.12.6
 test:
   override:
-    - echo "Hello circleCI"
+    - echo "Hello circleCIs"
     # - echo 5 > /home/ubuntu/buildCnt.txt
     # - case $CIRCLE_NODE_INDEX in 0) exit 0 ;; 1) exit 1 ;; esac:
     #     parallel: true
