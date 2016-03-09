@@ -3,11 +3,10 @@ merge_pull_request() {
   echo "マージします。"
   local PULL_REQUEST_NUM=$1
   local END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
-  local MSG="Find merge label! Merge automatically."
   local HASH_NUM=$(curl $END_POINT/pulls/$PULL_REQUEST_NUM | jq -r '.head.sha')
   echo $HASH_NUM
   echo $END_POINT/pulls/$PULL_REQUEST_NUM/merge
-  curl -X PUT -d {"commit_message": $MSG, "sha":"$HASH_NUM"} $END_POINT/pulls/$PULL_REQUEST_NUM/merge
+  curl -X PUT -d {"commit_message": "", "sha":"$HASH_NUM"} $END_POINT/pulls/$PULL_REQUEST_NUM/merge
 }
 
 
