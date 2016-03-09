@@ -7,6 +7,7 @@
 abs_path=`echo $(cd $(dirname $0) && pwd)`
 . ${abs_path}/github_comment.sh
 . ${abs_path}/common_function.sh
+. ${abs_path}/github_auto_merge.sh
 
 curr_build_id=$CIRCLE_BUILD_NUM #今回のビルドID
 CIRCLE_DOMAIN="circleci.com" # エンプラ版とドメインが違う
@@ -41,6 +42,8 @@ echo test_fail_cnt $test_fail_cnt
 if [ $test_fail_cnt -le 0 ]; then
   echo "Testはすべて成功です！"
   comment_pull_request $pull_request_num "true" $curr_build_id $BUILD_RESULT_URL
+  check_label "shipit" $pull_request_num
+
 else
   echo test_fail_cnt "個の失敗したテストがあります。"
   comment_pull_request $pull_request_num "false" $curr_build_id $BUILD_RESULT_URL
