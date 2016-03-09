@@ -1,6 +1,13 @@
 #!/bin/sh
 merge_pull_request() {
   echo "マージします。"
+  local PULL_REQUEST_NUM=$1
+  local END_POINT="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+  local MSG="Find merge label! Merge automatically."
+  local HASH_NUM=$(curl END_POINT/pulls/PULL_REQUEST_NUM | jq -r '.head.sha')
+  echo $HASH_NUM
+  echo $END_POINT/pulls/$PULL_REQUEST_NUM/merge
+  curl -X PUT -d {"commit_message": "$MSG", "sha":"$HASH_NUM"} $END_POINT/pulls/$PULL_REQUEST_NUM/merge
 }
 
 
@@ -18,7 +25,8 @@ check_label() {
     echo "らべる: " $label
     if [ "$label" = "$TARGET_LABEL" ]; then
       echo "自動マージ用に設定されたラベルがありました。マージします。"
-      exit 0
+      merge_pull_request $PULL_REQUEST_NUM
+      exit
     fi
   done
   echo "自動マージ用に設定されたラベルはありませんでした。終了します。"
