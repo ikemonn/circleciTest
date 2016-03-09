@@ -9,6 +9,7 @@ test:
     - echo "Hello circleCI"
     - npm install -g mocha
     - mocha --compilers coffee:coffee-script/register test.coffee | tee result.txt
+    - printenv
   post:
     - exit 0
     - exit 1
