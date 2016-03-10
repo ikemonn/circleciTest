@@ -25,7 +25,8 @@ check_label() {
     echo "らべる: " $label
     if [ "$label" = "$TARGET_LABEL" ]; then
       echo "自動マージ用に設定されたラベルがありました。マージします。"
-      merge_pull_request $PULL_REQUEST_NUM
+      # merge_pull_request $PULL_REQUEST_NUM
+      echo 0
       exit
     fi
   done
