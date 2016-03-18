@@ -10,6 +10,7 @@ test:
     - npm install -g mocha
     - mocha --compilers coffee:coffee-script/register test.coffee | tee result.txt
     - printenv
+	- jq --version
   post:
     - exit 0
     # - echo "post Test"
