@@ -13,9 +13,6 @@ test:
     - jq --version
     - which unbuffer
     - dpkg -l
-    - dpkg -l jq
-    - history
-    - history | grep jq
   post:
     - exit 0
     # - echo "post Test"
