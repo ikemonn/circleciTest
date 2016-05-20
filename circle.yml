@@ -7,12 +7,13 @@ machine:
 test:
   override:
     - echo "Hello circleCI"
-    - npm install -g mocha
-    - mocha --compilers coffee:coffee-script/register test.coffee | tee result.txt
     - printenv
-    - jq --version
-    - which unbuffer
-    - dpkg -l
+#    - npm install -g mocha
+#    - mocha --compilers coffee:coffee-script/register test.coffee | tee result.txt
+#    - printenv
+#    - jq --version
+#    - which unbuffer
+#    - dpkg -l
   post:
     - exit 0
     # - echo "post Test"
