@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 version=$(curl -s http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
 echo $version
