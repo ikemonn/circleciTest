@@ -1,7 +1,7 @@
 #!/bin/sh
 
 version=$(curl -s http://chromedriver.storage.googleapis.com/LATEST_REASE)
-
+echo $version
 if [[ "$version" =~ ^[0-9]+\.[0-9].*$ ]]; then
    echo "chromedriver version is " $version
 else
