@@ -7,7 +7,9 @@ machine:
 test:
   override:
     - echo "Hello circleCI"
-    - printenv
+    - sh install_chromedriver.sh
+    - chromedriver -v
+    # - printenv
 #    - npm install -g mocha
 #    - mocha --compilers coffee:coffee-script/register test.coffee | tee result.txt
 #    - printenv
@@ -23,4 +25,4 @@ test:
     # - echo retryCnt $KARTE_RETRY_COUNT
     # - printenv
     # - curl https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM
-    - sh ./rebuild.sh
+    # - sh ./rebuild.sh
