@@ -18,7 +18,7 @@ test:
 #    - dpkg -l
   post:
     - exit 0
-    - ssh naoto_kato@develop-registry.karte.io 
+    - ssh naoto_kato@develop-registry.karte.io 'echo "develop" > /home/naoto_kato/request.pipe'
     # - echo "post Test"
     # - echo project $CIRCLE_PROJECT_REPONAME
     # - echo user $CIRCLE_PROJECT_USERNAME
