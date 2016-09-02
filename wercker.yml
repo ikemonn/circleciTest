@@ -4,7 +4,7 @@ build:
     - script:
         name: echo
         code: |
-          exit 1
+          echo 1
   after-steps:
     - script:
         name: post to critical_incidents
