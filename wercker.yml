@@ -4,7 +4,7 @@ build:
     - script:
         name: echo
         code: |
-          echo 'BUILD'
+          exit 1
   after-steps:
     - wantedly/pretty-slack-notify:
         webhook_url: https://hooks.slack.com/services/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
