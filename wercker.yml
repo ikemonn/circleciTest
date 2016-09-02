@@ -1,0 +1,28 @@
+box: wercker/default
+build:
+  steps:
+    - script:
+        name: echo
+        code: |
+          echo 'deploy to s3'
+  after-steps:
+    - wantedly/pretty-slack-notify:
+        webhook_url: https://hooks.slack.com/services/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
+        channel: test_ikemonn
+        username: wercker
+        branches: develop
+deploy:
+  steps:
+    # Execute the s3sync deploy step, a step provided by wercker
+    # - s3sync:
+    #     key_id: $AWS_ACCESS_KEY_ID
+    #     key_secret: $AWS_SECRET_ACCESS_KEY
+    #     bucket_url: $AWS_BUCKET_URL
+    #     source_dir: src/public/libs/tracker/
+    #     opts: --add-header=Cache-Control:max-age=0 --acl-public
+  after-steps:
+    - wantedly/pretty-slack-notify:
+        webhook_url: https://hooks.slack.com/services/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
+        channel: test_ikemonn
+        username: wercker
+        branches: develop

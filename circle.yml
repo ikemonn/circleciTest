@@ -7,8 +7,8 @@ machine:
 test:
   override:
     - echo "Hello circleCI"
-    - ./install_chromedriver.sh
-    - ./chromedriver -v
+    # - ./install_chromedriver.sh
+    # - ./chromedriver -v
     # - printenv
 #    - npm install -g mocha
 #    - mocha --compilers coffee:coffee-script/register test.coffee | tee result.txt
@@ -18,7 +18,7 @@ test:
 #    - dpkg -l
   post:
     - exit 0
-    - ssh naoto_kato@develop-registry.karte.io "echo $CIRCLE_BRANCH > /home/naoto_kato/request.pipe"
+    # - ssh naoto_kato@develop-registry.karte.io "echo $CIRCLE_BRANCH > /home/naoto_kato/request.pipe"
     # - echo "post Test"
     # - echo project $CIRCLE_PROJECT_REPONAME
     # - echo user $CIRCLE_PROJECT_USERNAME
