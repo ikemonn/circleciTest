@@ -4,7 +4,7 @@ build:
     - script:
         name: echo
         code: |
-          exit 0
+          echo "hoge"
   after-steps:
     - script:
         name: env
