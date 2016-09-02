@@ -6,6 +6,10 @@ build:
         code: |
           exit 1
   after-steps:
+    - script:
+        name: env
+        code: |
+          env
     - wantedly/pretty-slack-notify:
         webhook_url: https://hooks.slack.com/services/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
         channel: test_ikemonn
