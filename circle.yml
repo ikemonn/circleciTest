@@ -1,8 +1,29 @@
+general:
+  artifacts:
+    - buildCnt.txt
 machine:
   node:
     version: 0.12.6
 test:
   override:
     - echo "Hello circleCI"
+    # - ./install_chromedriver.sh
+    # - ./chromedriver -v
+    # - printenv
+#    - npm install -g mocha
+#    - mocha --compilers coffee:coffee-script/register test.coffee | tee result.txt
+#    - printenv
+#    - jq --version
+#    - which unbuffer
+#    - dpkg -l
   post:
-    - echo "End Test"
+    - exit 0
+    # - ssh naoto_kato@develop-registry.karte.io "echo $CIRCLE_BRANCH > /home/naoto_kato/request.pipe"
+    # - echo "post Test"
+    # - echo project $CIRCLE_PROJECT_REPONAME
+    # - echo user $CIRCLE_PROJECT_USERNAME
+    # - echo buildNum $CIRCLE_BUILD_NUM
+    # - echo retryCnt $KARTE_RETRY_COUNT
+    # - printenv
+    # - curl https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM
+    # - sh ./rebuild.sh
