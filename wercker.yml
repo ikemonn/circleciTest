@@ -1,0 +1,35 @@
+box: ubuntu
+build:
+  steps:
+    - script:
+        name: echo
+        code: |
+          echo "steps"
+  after-steps:
+    - script:
+        name: echo
+        code: |
+          echo "after-step"
+deploy:
+  steps:
+    - script:
+        name: echo deploy
+        code: |
+          echo 'DEPLOY'
+  after-steps:
+    - script:
+        name: master after-step
+        code: |
+          echo "master after-step"
+
+ikemonn:
+  steps:
+    - script:
+        name: echo ikemonn
+        code: |
+          echo 'ikemonn'
+  after-steps:
+    - script:
+        name: ikemonn after-step
+        code: |
+          echo "ikemonn after-step"
